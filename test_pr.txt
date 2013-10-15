@@ -1,5 +1,9 @@
 tape:
 *** **xxxx
+initial state:
+1
+final state:
+4
 program:
 1,*,1,*,right
 1, ,2,*,right

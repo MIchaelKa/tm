@@ -16,9 +16,6 @@ class TuringMachine
   LEFT  = :left
   NONE  = :none
 
-  INITIAL_STATE = 0
-  END_STATE     = 3
-
   INITIAL_POS   = 0
 
   #indexes in one instruction
@@ -44,15 +41,18 @@ class TuringMachine
     @program = Array.new { Array.new { Hash.new }}
 
     #index -> character or state
-    @state_alphabet = Array.new
     @character_alphabet = Array.new
+    @state_alphabet     = Array.new
 
-    @current_state = INITIAL_STATE
-    @position      = INITIAL_POS
+    @current_state = 0
+    @final_state   = 0
+
+    @position = INITIAL_POS
   end
 
   def run
-    while @current_state != END_STATE do
+    print "\nTrace of the machine's execution:\n\n"
+    while @current_state != @final_state do
       print_tape
 
       character  = @character_alphabet.index @tape[@position]
@@ -107,7 +107,21 @@ class TuringMachine
       return
     end
     #get initial state
-
+    if @program_file.readline.strip.eql? "initial state:"
+      @current_state = push_in_alphabet(@state_alphabet,
+                                        @program_file.readline.strip)
+    else
+      print "Error: could not find a tape description. \n"
+      return
+    end
+    #get final state
+    if @program_file.readline.strip.eql? "final state:"
+      @final_state = push_in_alphabet(@state_alphabet,
+                                        @program_file.readline.strip)
+    else
+      print "Error: could not find a tape description. \n"
+      return
+    end
     #parse program
     if @program_file.readline.strip.eql? "program:"
       while !@program_file.eof do
@@ -119,16 +133,19 @@ class TuringMachine
           return
         end
 
-        state_alph_index = push_in_alphabet(@state_alphabet, instruction[OLD_STATE_INDEX])
-        character_alph_index = push_in_alphabet(@character_alphabet, instruction[OLD_CHARACTER_INDEX])
-
-        new_state_alph_index = push_in_alphabet(@state_alphabet, instruction[NEW_STATE_INDEX])
-        new_character_alph_index = push_in_alphabet(@character_alphabet, instruction[NEW_CHARACTER_INDEX])
+        character_alph_index     = push_in_alphabet(@character_alphabet,
+                                                    instruction[OLD_CHARACTER_INDEX])
+        state_alph_index         = push_in_alphabet(@state_alphabet,
+                                                    instruction[OLD_STATE_INDEX])
+        new_character_alph_index = push_in_alphabet(@character_alphabet,
+                                                    instruction[NEW_CHARACTER_INDEX])
+        new_state_alph_index     = push_in_alphabet(@state_alphabet,
+                                                    instruction[NEW_STATE_INDEX])
 
         direction = instruction[DIRECTION_INDEX].to_sym
         if ( direction != RIGHT &&
-        	 direction != LEFT  &&
-        	 direction != NONE )
+             direction != LEFT  &&
+             direction != NONE )
           print "Error: invalid direction.\n"
           return
         end
@@ -146,10 +163,12 @@ class TuringMachine
           @program[state_alph_index].push Hash.new
         end
 
-        @program[state_alph_index][character_alph_index] = next_instruction        
+        @program[state_alph_index][character_alph_index] = next_instruction
       end #while !@program_file.eof
-      p @program
+      print "Parsing program for TM was successfully ended\n"
+      print "State alphabet: "
       p @state_alphabet
+      print "Character alphabet: "
       p @character_alphabet
     else
       print "Error: could not find a program description.\n"
