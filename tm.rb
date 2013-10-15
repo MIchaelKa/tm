@@ -34,7 +34,7 @@ class TuringMachine
       program_file_name = ARGV[0]
       print "Using program - " + program_file_name + "\n"
     else
-      program_file_name = "test_pr.txt"
+      program_file_name = "programs/addition.txt"
       print "No args passed, using default program - " + program_file_name + "\n"
     end
     @program_file = File.open( program_file_name, "r" )
@@ -111,15 +111,15 @@ class TuringMachine
       @current_state = push_in_alphabet(@state_alphabet,
                                         @program_file.readline.strip)
     else
-      print "Error: could not find a tape description. \n"
+      print "Error: could not find an initial state description. \n"
       return
     end
     #get final state
     if @program_file.readline.strip.eql? "final state:"
       @final_state = push_in_alphabet(@state_alphabet,
-                                        @program_file.readline.strip)
+                                      @program_file.readline.strip)
     else
-      print "Error: could not find a tape description. \n"
+      print "Error: could not find a final state description. \n"
       return
     end
     #parse program

@@ -1,0 +1,31 @@
+tape:
+*111x11=*         ***
+initial state:
+q0
+final state:
+q9
+program:
+q0,*,q0,*,right
+q0,1,q0,1,right	
+q0,x,q1,x,right	
+q1,1,q2,a,right	
+q2,1,q2,1,left	
+q2,a,q2,a,left	
+q2,=,q2,=,left	
+q2,x,q3,x,left	
+q3,1,q4,a,right	
+q3,a,q3,a,left	
+q3,*,q6,*,right	
+q4,x,q4,x,right	
+q4,a,q4,a,right
+q4,=,q4,=,right
+q4,1,q4,1,right
+q4,*,q5,1,right
+q5, ,q2,*,left
+q6,a,q6,1,right
+q6,x,q7,x,right
+q7,a,q7,a,right
+q7,1,q2,a,right
+q7,=,q8,=,left
+q8,a,q8,1,left
+q8,x,q9,x,none
