@@ -3,7 +3,7 @@ tape:
 initial state:
 q0
 final state:
-q9
+end_state
 program:
 q0,*,q0,*,right
 q0,1,q0,1,right	
@@ -28,4 +28,4 @@ q7,a,q7,a,right
 q7,1,q2,a,right
 q7,=,q8,=,left
 q8,a,q8,1,left
-q8,x,q9,x,none
+q8,x,end_state,x,none

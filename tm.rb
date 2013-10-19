@@ -32,11 +32,22 @@ class TuringMachine
 
     if ARGV.size > 0
       program_file_name = ARGV[0]
-      print "Using program - " + program_file_name + "\n"
+      if File.exist? program_file_name
+        print "Using program - " + program_file_name + "\n"
+        if ARGV.size > 1 && ARGV[1].eql?("-tr")
+          base_name = File.basename(program_file_name, File.extname(program_file_name))
+          print "Trace file - #{base_name}_trace.txt\n"
+          STDOUT.reopen(File.open("programs/#{base_name}_trace.txt",'w'))
+        end
+      else
+        program_file_name = "programs/addition.txt"
+        print "File does not exist, using default program - " + program_file_name + "\n"
+      end
     else
       program_file_name = "programs/addition.txt"
       print "No args passed, using default program - " + program_file_name + "\n"
     end
+
     @program_file = File.open( program_file_name, "r" )
     @program = Array.new { Array.new { Hash.new }}
 
@@ -192,9 +203,3 @@ class TuringMachine
   end
 
 end
-
-#TuringMachine.new.run()
-tm = TuringMachine.new
-
-tm.parse_tm_program
-tm.run
